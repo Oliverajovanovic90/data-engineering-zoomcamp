@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.pyc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Credentials
+*.json
+*.pem
+*.key
+*.p12
+*.serviceaccount.json
+.env
+*.tfstate
+*.tfstate.backup
+.terraform/
+
+# OS / Environment
+.DS_Store
+.vscode/
+.anaconda*
+.env/
+.venv/
+
+# SSH + Cloud
+.ssh/
+.config/gcloud/
+
+# Docker
+docker-data/
+
+# VS Code
+.history/
