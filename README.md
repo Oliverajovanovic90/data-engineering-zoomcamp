@@ -1,175 +1,165 @@
 # data-engineering-zoomcamp
 Practice work from the Data Engineering Zoomcamp, covering GCP, Docker, Terraform, workflow orchestration, data ingestion, BigQuery, dbt, Spark, and Kafka.
 
-# ⭐ Section 1 (Docker, Postgres, Terraform, GCP)  
+# ⭐ Docker, Postgres, Terraform, GCP 
 Foundation of the entire data engineering stack.  
 The focus is on containerization, running databases in Docker, interacting with Postgres, and provisioning cloud infrastructure using Terraform.
 
----
-# 📘 1. Introduction  
-Essential tools and concepts required for modern data engineering:
+## 🚀 1. Environment Overview
 
-- Docker & containerization  
-- Postgres + pgAdmin inside Docker  
-- SQL basics  
-- Terraform for Infrastructure as Code  
-- Google Cloud Platform (VMs, Storage, IAM)  
----
+Cloud & Architecture
 
-# 🐳 2. Docker + Postgres
+Docker fundamentals
 
-### 🎥 **Introduction to Docker**
-Topics learned:
-- Why we need containers in data engineering  
-- Running repeatable pipelines in isolated environments  
-- Building a simple Docker-based data ingestion pipeline  
+Running Postgres in Docker
 
----
+Ingesting NYC Taxi data
 
-### 🎥 **Ingesting NY Taxi Data to Postgres**
-Hands-on tasks completed:
-- Ran Postgres locally using Docker  
-- Connected using **pgcli**  
-- Explored NYC Taxi dataset  
-- Loaded CSV data into Postgres using a Python ingestion script  
+Terraform (Infrastructure as Code)
 
-> If pgcli is unavailable, pandas/Jupyter connections were used as an alternative.
+GCP VM setup & configuration
 
----
+## 🐳 2. Docker + Postgres
+✔️ Run Postgres & pgAdmin using Docker Compose
+## docker-compose.yml
+services:
+  pgdatabase:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=ny_taxi
+    ports:
+      - "5432:5432"
 
-### 🎥 **Connecting pgAdmin + Postgres**
-Concepts covered:
-- pgAdmin interface  
-- Docker networking  
-- Creating a pgAdmin server connection  
-- Container-to-container communication  
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=root
+    ports:
+      - "8080:80"
 
-PgAdmin 4 UI requires:
-1. Right-click **Servers**  
-2. Register → **Server**  
-3. Enter container credentials  
 
----
+Run:
 
-### 🎥 **Putting the Ingestion Script into Docker**
-Learnings:
-- Converted a Jupyter notebook to a Python script  
-- Added CLI parameters via **argparse**  
-- Built a Docker image for ingestion  
-- Ran the script inside the container  
-
----
-
-### 🎥 **Running Postgres & pgAdmin with Docker-Compose**
-Topics:
-- Why Docker-Compose is needed  
-- Defining multi-container systems  
-- Running everything with:
-
-bash: 
 docker compose up -d
+docker ps
 
-# ☁️ 3. Google Cloud Platform (GCP)
+✔️ Ingest NY Taxi CSV into Postgres
 
-# 🛠️ 4. Terraform
+Converted from notebook → Python script → Docker image.
 
-Located in:
-01-docker-terraform/1_terraform_gcp/terraform/terraform_basic
+python ingest_data.py \
+  --user=root \
+  --password=root \
+  --host=localhost \
+  --port=5432 \
+  --db=ny_taxi \
+  --table_name=yellow_taxi_data \
+  --url=<csv_url>
 
-🎥 Terraform Concepts & Overview
+✔️ Connected to DB using pgcli
+pgcli -h localhost -u root -d ny_taxi
 
-Infrastructure as Code (IaC)
-Providers
-Resources
-State management
-
-🎥 Terraform Basics (Simple Deployment)
+## ☁️ 3. Google Cloud Platform (GCP)
 
 Created:
 
-main.tf
+A Compute Engine VM (Ubuntu 22.04, SSH access)
 
-variables.tf
+Installed:
 
-Ran:
+Anaconda
+
+Docker
+
+Docker Compose
+
+pgcli
+
+Terraform
+
+Connected via VS Code Remote SSH
+
+SSH:
+
+ssh de-zoomcamp
+
+## 🛠️ 4. Terraform on GCP
+✔️ Provider + Resource Creation
+
+Created a GCS “data lake” bucket.
+
+provider "google" {
+  project = var.project_id
+  region  = var.region
+}
+
+resource "google_storage_bucket" "data-lake-bucket" {
+  name     = "olyzoom-data-lake-bucket"
+  location = "US"
+}
+
+
+Commands used:
 
 terraform init
 terraform plan
 terraform apply
 
 
-→ Successfully created a GCS bucket (olyzoom-data-lake-bucket)
+Result: GCS bucket successfully provisioned.
 
-🎥 Deployment with Variables File
+## 🎯 5. Skills Demonstrated
+Infrastructure
 
-Topics:
+Docker, Docker Compose
 
-Variables
+Terraform (provider blocks, resources, variables)
 
-Default values
+GCP IAM, Storage, Compute Engine
 
-Passing -var="project=..."
+Data Engineering
 
-🖥️ 5. Cloud VM Setup (GCP)
-🎥 GCP VM Setup
+Dataset ingestion to Postgres
 
-Completed steps:
+SQL joins, aggregations, schema creation
 
-Generated SSH keys
+Python scripting + argparse
 
-Added public key to GCP Metadata
+DevOps
 
-Created Ubuntu VM (Compute Engine)
+Remote VM setup
 
-Connected using SSH (from Codespaces & local)
+SSH configuration
 
-Installed on the VM:
+VS Code Remote SSH
 
-Anaconda
+Running containers and databases on cloud VM
 
-Docker + Docker Compose
+## 📦 6. Repository Contents:
 
-pgcli
+docker-compose.yml
 
-Terraform
+Dockerfile.ingest
 
-Completed configuration:
+ingest_data.py
 
-Created SSH config file
+pipeline.py
 
-Used VS Code Remote-SSH to edit files on VM
+Terraform files (main.tf, variables.tf)
 
-Port-forwarded:
+Jupyter notebooks (pg-test-connection.ipynb, Upload_data.ipynb)
 
-pgAdmin (8080)
 
-Postgres (5432)
+## ✅ Summary
 
-File Transfer via SFTP (Course Material)
+Full foundation for cloud-based data engineering:
 
-Learned:
-
-Creating .gcp folder
-
-Uploading service account JSON credentials
-
-Activating service account via:
-
-gcloud auth activate-service-account --key-file <path>
-
-VM Shutdown
-
-To avoid charges:
-
-Stopped/terminated instance through GCP
-
-Terraform resources destroyed when not needed
-
-🎯 Results:
-✔ A full cloud-based development environment
-✔ Dockerized Postgres + pgAdmin
-✔ A functioning ingestion pipeline
-✔ SQL joins and data checks
-✔ A GCS bucket created with Terraform
-✔ SSH + VS Code remote development environment
-✔ Working Docker Compose workflow
+✔ Dockerized Postgres & pgAdmin
+✔ Automated ingestion pipeline
+✔ SQL exploration
+✔ Terraform deployment
+✔ Full GCP VM environment with Python, Docker & Terraform
+✔ Infrastructure ready for (GCS + BigQuery ingestion)
