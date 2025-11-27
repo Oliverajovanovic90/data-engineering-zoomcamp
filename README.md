@@ -163,3 +163,88 @@ Full foundation for cloud-based data engineering:
 ✔ Terraform deployment
 ✔ Full GCP VM environment with Python, Docker & Terraform
 ✔ Infrastructure ready for (GCS + BigQuery ingestion)
+
+# 🚀 Kestra ETL Workflows
+
+This repository contains Kestra workflow orchestration pipelines built in GitHub Codespaces (VS Code) as part of the DataTalksClub Data Engineering Zoomcamp, focusing on:
+
+ETL orchestration with Kestra
+
+Loading NYC Taxi trip data into Postgres
+
+Cloud integration with GCP (GCS + BigQuery)
+
+Analytics engineering using dbt + BigQuery
+
+Infrastructure preparation using KV & scheduling
+
+🧰 Tools & Technologies Practiced
+
+Kestra — orchestration & workflow automation
+
+Docker Compose — service deployment in Codespaces
+
+PostgreSQL — staging & final ETL load target
+
+Google Cloud Storage (GCS) — cloud file storage
+
+BigQuery — data warehouse & table creation
+
+dbt (Data Build Tool) — SQL transformation (Analytics Engineering)
+
+Git/GitHub — version control & workflow storage
+
+📂 Workflow Files Included
+
+All workflows used by Kestra are stored in the:
+
+/Workflow
+
+
+And include the following flows:
+
+ 01_getting_started_data_pipeline.yml
+ 02_postgres_taxi_scheduled.yml
+ 03_postgres_dbt.yml
+ 04_gcp_kv.yml
+ 05_gcp_setup.yml
+ 06_gcp_taxi_scheduled.yml
+ 07_gcp_dbt.yml
+
+These pipelines demonstrate my ability to orchestrate ETL workloads, integrate cloud services, prepare data warehouse tables, and run analytics transformations with dbt.
+
+▶️ How to Run the Project (Local / Codespaces)
+1️⃣ Start Kestra services
+docker compose up -d
+
+2️⃣ Verify Kestra is running
+
+Open UI (automatically exposed by Codespaces):
+
+http://localhost:8080
+
+3️⃣ Run a workflow from namespace
+
+Use the Kestra UI to execute any of the workflow IDs listed above.
+
+🧠 What This Project Demonstrates
+
+✅ Building reproducible Docker-based data environments
+✅ Automating data ingestion using shell + Python task runners
+✅ Safe Postgres staging & merge logic using hashed unique IDs
+✅ Provisioning GCP cloud resources from KV store variables
+✅ Creating structured, partitioned BigQuery tables
+✅ Running dbt builds & dependency resolution inside containers
+✅ Understanding real-world ETL orchestration patterns
+
+💼 Real-World Usage Context
+
+In production environments, companies use tools like Kestra for workflow orchestration, but data is explored and visualized using:
+
+Business Intelligence (Power BI / Looker / Metabase)
+
+Database clients (DBeaver / DataGrip / Postgres CLI)
+
+Cloud data warehouse UI (BigQuery Console, Data products, etc.)
+
+Kestra does not render tables visually — it runs the pipelines, while other tools display the data.
