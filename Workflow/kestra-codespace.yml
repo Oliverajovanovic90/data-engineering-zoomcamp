@@ -1,0 +1,60 @@
+services:
+  kestra-postgres:
+    image: postgres:15
+    container_name: kestra-postgres
+    environment:
+      POSTGRES_DB: kestra
+      POSTGRES_USER: kestra
+      POSTGRES_PASSWORD: k3str4
+    volumes:
+      - kestra-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kestra -d kestra"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  kestra:
+    image: kestra/kestra:latest       # ⬅️ your cached working image
+    container_name: kestra
+    command: server standalone
+    user: "root"
+
+    environment:
+      KESTRA_CONFIGURATION: |
+        datasources:
+          postgres:
+            url: jdbc:postgresql://kestra-postgres:5432/kestra
+            driverClassName: org.postgresql.Driver
+            username: kestra
+            password: k3str4
+        kestra:
+          server:
+            basicAuth:
+              enabled: false
+          security:
+            enabled: false            # ⬅️ THIS disables login completely
+          tasks:
+            tmpDir:
+              path: /tmp/kestra-wd/tmp
+          storage:
+            type: local
+            local:
+              basePath: "/app/storage"
+          repository:
+            type: postgres
+          queue:
+            type: postgres
+
+    volumes:
+      - ./kestra-wd:/tmp/kestra-wd
+
+    ports:
+      - "8080:8080"
+
+    depends_on:
+      kestra-postgres:
+        condition: service_healthy
+
+volumes:
+  kestra-postgres:
